@@ -1,4 +1,4 @@
-module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_F, I_F, S_F, D_F, J_F, H_F, F_F, T_F, rst_n);
+module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_F, I_F, S_F, R_F, J_F, H_F, F_F, T_F, rst_n);
     input clk;
     input [2:0] Data_Out; // rename to OPCODE
     input [2:0] RegT; // rename XTRA_OPCODE
@@ -16,7 +16,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
     output reg [1:0] ALU_F;
     output reg [1:0] I_F;
     output reg [1:0] S_F;
-    output reg  D_F;
+    output reg  R_F;
     output reg [2:0] J_F;
     output reg H_F;
     output reg F_F;
@@ -31,7 +31,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
     reg [1:0] ALU_F_next;
     reg [1:0] I_F_next;
     reg [1:0] S_F_next;
-    reg  D_F_next;
+    reg  R_F_next;
     reg [2:0] J_F_next;
     reg H_F_next;
     reg F_F_next;
@@ -45,7 +45,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
         B_Sel <= B_Sel_next;
         C_Sel <= C_Sel_next;
         D_Sel <= D_Sel_next;
-        D_F <= D_F_next;
+        R_F <= R_F_next;
         F_F <= F_F_next;
         I_F <= I_F_next;
         J_F <= J_F_next;
@@ -63,7 +63,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
             B_Sel_next = 0;  // muxB = muxA
             C_Sel_next = 0; // muxC = muxD
             D_Sel_next = 0; // muxD = ALU_Out
-            D_F_next = 0; // Data_Out = RegD[muxA]
+            R_F_next = 0; // Data_Out = RegD[muxA]
             F_F_next = 0;
             I_F_next = 2'b00; // regI = regI
             J_F_next = 3'b00; // regJ = regJ
@@ -80,7 +80,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; // muxB = muxA
                     C_Sel_next = 0; // muxC = muxD
                     D_Sel_next = 0; // muxD = ALU_Out
-                    D_F_next = 0; // Data_Out = Data_Out
+                    R_F_next = 0; // Data_Out = Data_Out
                     F_F_next = 0;
                     I_F_next = 2'b01; //* regI = regI + 1
                     J_F_next = 3'b000; // regJ = regJ
@@ -95,7 +95,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; 
                     C_Sel_next = 0;
                     D_Sel_next = 0;
-                    D_F_next = 1; // Ram[RegJ] = regT
+                    R_F_next = 1; // Ram[RegJ] = regT
                     F_F_next = 0;
                     I_F_next = 2'b01; // IncI : regI += 1
                     J_F_next = 3'b001; // regJ = regJ + 1
@@ -110,7 +110,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; 
                     C_Sel_next = 0; // muxC = muxD
                     D_Sel_next = 0; // muxD = ALU_Out
-                    D_F_next = 0; // Data_Out = regD[regJ]
+                    R_F_next = 0; // Data_Out = regD[regJ]
                     F_F_next = 0;
                     I_F_next = 2'b01; //! IncI : regI = regI
                     J_F_next = 3'b001; // regJ = regJ + 1
@@ -129,7 +129,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 0; // muxB = muxA
                             C_Sel_next = 0; // muxC = muxD
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = Data_Out
+                            R_F_next = 0; // Data_Out = Data_Out
                             F_F_next = 0;
                             I_F_next = 2'b01; //* regI = regI + 1
                             J_F_next = 3'b010; // regJ = regS
@@ -144,7 +144,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 0; // muxB = muxA
                             C_Sel_next = 0; // muxC = muxD
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = Data_Out
+                            R_F_next = 0; // Data_Out = Data_Out
                             F_F_next = 0;
                             I_F_next = 2'b01; //* regI = regI + 1
                             J_F_next = 3'b000; // regJ = regJ
@@ -159,7 +159,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 1; // muxB = regD
                             C_Sel_next = 1; // muxC = regJ
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = ram[regS]
+                            R_F_next = 0; // Data_Out = ram[regS]
                             F_F_next = 2'b01; // regF = F_In
                             I_F_next = 2'b01; // IncI : regI += 1
                             J_F_next = 3'b100; // regJ = muxB
@@ -174,7 +174,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 1; // muxB = regD
                             C_Sel_next = 1; // muxC = regJ
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = ram[regS]
+                            R_F_next = 0; // Data_Out = ram[regS]
                             F_F_next = 2'b01; // regF = F_In
                             I_F_next = 2'b01; // IncI : regI += 1
                             J_F_next = 3'b101; // regJ = muxB
@@ -189,7 +189,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 1; // muxB = regD
                             C_Sel_next = 1; // muxC = regJ
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = ram[regS]
+                            R_F_next = 0; // Data_Out = ram[regS]
                             F_F_next = 2'b01; // regF = F_In
                             I_F_next = 2'b01; // IncI : regI += 1
                             J_F_next = 3'b110; // regJ = muxB
@@ -204,7 +204,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 1; // muxB = regD
                             C_Sel_next = 1; // muxC = regJ
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = ram[regS]
+                            R_F_next = 0; // Data_Out = ram[regS]
                             F_F_next = 2'b01; // regF = F_In
                             I_F_next = 2'b01; // IncI : regI += 1
                             J_F_next = 3'b111; // regJ = muxB
@@ -219,7 +219,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                             B_Sel_next = 0; // muxB = muxA
                             C_Sel_next = 0; // muxC = muxD
                             D_Sel_next = 0; // muxD = ALU_Out
-                            D_F_next = 0; // Data_Out = Data_Out
+                            R_F_next = 0; // Data_Out = Data_Out
                             F_F_next = 0;
                             I_F_next = 2'b01; //* regI = regI + 1
                             J_F_next = 3'b000; // regJ = regJ
@@ -236,7 +236,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; 
                     C_Sel_next = 0;
                     D_Sel_next = 0;
-                    D_F_next = 1; // Ram[RegS] = regT
+                    R_F_next = 1; // Ram[RegS] = regT
                     F_F_next = 0;
                     I_F_next = 2'b01; // IncI : regI += 1
                     J_F_next = 3'b000; // regJ = regJ
@@ -251,7 +251,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; 
                     C_Sel_next = 0;
                     D_Sel_next = 0;
-                    D_F_next = 0; // Data_Out = ram[regS]
+                    R_F_next = 0; // Data_Out = ram[regS]
                     F_F_next = 2'b01; // regF = F_In
                     I_F_next = 2'b01; // IncI : regI += 1
                     J_F_next = 3'b000; // regJ = regJ
@@ -268,7 +268,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                         B_Sel_next = 2'b00; // muxB = regI
                         C_Sel_next = 0;
                         D_Sel_next = 0;
-                        D_F_next = 0; // Data_Out = RegD[muxA]
+                        R_F_next = 0; // Data_Out = RegD[muxA]
                         F_F_next = 2'b11; // reset regF : regF = 0
                         I_F_next = 2'b10; // regI = regJ
                         J_F_next = 3'b010; // regJ = regI
@@ -281,7 +281,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                         B_Sel_next = 2'b00; // muxB = regI
                         C_Sel_next = 0;
                         D_Sel_next = 0;
-                        D_F_next = 0; // Data_Out = RegD[muxA]
+                        R_F_next = 0; // Data_Out = RegD[muxA]
                         F_F_next = 2'b11; // reset regF : regF = 0
                         I_F_next = 2'b01; // IncI : regI += 1
                         J_F_next = 3'b010; // regJ = regI
@@ -297,7 +297,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; // muxB = muxA
                     C_Sel_next = 0; // muxC = muxD
                     D_Sel_next = 0; // muxD = ALU_Out
-                    D_F_next = 0; // Data_Out = Data_Out
+                    R_F_next = 0; // Data_Out = Data_Out
                     F_F_next = 0;
                     I_F_next = 2'b01; //* regI = regI + 1
                     J_F_next = 3'b000; // regJ = regJ
@@ -311,7 +311,7 @@ module decoder(clk, Data_Out, RegT, regP, regF, A_Sel, B_Sel, C_Sel, D_Sel, ALU_
                     B_Sel_next = 0; // muxB = muxA
                     C_Sel_next = 0; // muxC = muxD
                     D_Sel_next = 0; // muxD = ALU_Out
-                    D_F_next = 0; // Data_Out = Data_Out
+                    R_F_next = 0; // Data_Out = Data_Out
                     F_F_next = 0;
                     I_F_next = 2'b01; //* regI = regI + 1
                     J_F_next = 3'b000; // regJ = regJ
