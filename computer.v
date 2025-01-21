@@ -39,7 +39,7 @@ module computer (
     F_F,
     T_F,
     I_F,
-    D_F,
+    R_F,
     J_F,
     S_F,
     ALU_F,
@@ -79,7 +79,7 @@ module computer (
     output F_F;
     output T_F;
     output [1:0] I_F;
-    output D_F;
+    output R_F;
     output [2:0] J_F;
     output [1:0] S_F;
     output [1:0] ALU_F;
@@ -98,7 +98,7 @@ module computer (
     
     regP regP (clk, rst_n, P);
 
-    regR ram (clk, D_F, A, T, R);
+    regR ram (clk, R_F, A, T, R);
 
     muxA muxA (A_Sel, I, J, S, 12'd0, X);
 
@@ -114,7 +114,7 @@ module computer (
 
     decoder decoder(clk, R, T, P, F,
                     A_Sel, B_Sel, C_Sel, D_Sel,
-                    ALU_F, I_F, S_F, D_F, J_F,
+                    ALU_F, I_F, S_F, R_F, J_F,
                     H_F, F_F, T_F, rst_n);
 
 
