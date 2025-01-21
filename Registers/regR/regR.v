@@ -24,12 +24,6 @@ module regR(clk, R_F, Address, Data_In, Data_Out);
         Ram[69] = 3'b000;
         Ram[70] = 3'b000;
         Ram[71] = 3'b011;
-        // Ram[72] = 3'b110;
-
-
-
-        
-        // Ram[85] = 3'b101;
 
 
 
@@ -39,16 +33,6 @@ module regR(clk, R_F, Address, Data_In, Data_Out);
 
     always @(negedge clk);
 
-
-    // always @(*)
-    // begin
-    //     case (D_F)
-    //         2'b00: Data_Out <= Data_Next;
-    //         2'b01: Data_Out <= Ram[Address];
-    //         2'b10: Ram[Address] <= Data_In;
-    //         default: Data_Out <= Ram[Address];
-    //     endcase
-    // end
 
 
     // We are implementing an asynchronous memory with a clocked write
@@ -70,9 +54,5 @@ module regR(clk, R_F, Address, Data_In, Data_Out);
     begin
         Ram[Address] <= Ram_Next;
     end
-
-    // always @(*) begin
-    //     Data_Next = Data_Out;
-    // end
 
 endmodule
